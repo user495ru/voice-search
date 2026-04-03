@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Voice Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-family: Arial; text-align:center; padding-top:50px;">
+
+<h1>🎤 Слушаю...</h1>
+<div id="status">Инициализация...</div>
+
+<script>
+const statusEl = document.getElementById('status');
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (!SpeechRecognition) {
+  statusEl.textContent = 'Браузер не поддерживает.';
+} else {
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'ru-RU';
+
+  recognition.onstart = () => {
+    statusEl.textContent = 'Говорите...';
+  };
+
+  recognition.onresult = (event) => {
+    const query = event.results[0][0].transcript;
+    statusEl.textContent = 'Ищу: ' + query;
+
+    window.location.href =
+      'https://www.google.com/search?q=' + encodeURIComponent(query);
+  };
+
+  recognition.onerror = (e) => {
+    statusEl.textContent = 'Ошибка: ' + e.error;
+  };
+
+  window.onload = () => {
+    recognition.start();
+  };
+}
+</script>
+
+</body>
+</html>
